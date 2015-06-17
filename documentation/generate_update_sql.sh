@@ -2,12 +2,12 @@
 DIR_NAME=$1
 
 SRC_NAME=localhost
-SRC_DB=cw
+SRC_DB=linda
 SRC_HOST=localhost
 
-DST_NAME=ccem
-DST_DB=cw
-DST_HOST=ccem.ufrgs.br
+DST_NAME=atena
+DST_DB=linda
+DST_HOST=atena.linda.ufrgs.br
 
 function generate_backup_schema(){
    echo "Connecting to $2 database at $1 server..."

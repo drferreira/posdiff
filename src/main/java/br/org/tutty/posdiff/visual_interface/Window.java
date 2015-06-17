@@ -7,16 +7,22 @@ import java.awt.*;
  * Created by drferreira on 16/06/15.
  */
 public class Window extends JFrame implements View{
-    private static Integer height = 300;
-    private static Integer widht = 500;
+    private static Integer height = 200;
+    private static Integer widht = 800;
 
-    private InsidePanel insidePanel;
+    public RightPanel rightPanel = new RightPanel();
+    public LeftPanel leftPanel = new LeftPanel();
+    public BottomPanel bottomPanel = new BottomPanel(this);
 
     @Override
     public void mount() {
-        insidePanel = new InsidePanel();
-        insidePanel.mount();
-        this.add(insidePanel);
+        rightPanel.mount();
+        bottomPanel.mount();
+        leftPanel.mount();
+
+        this.add(leftPanel, BorderLayout.WEST);
+        this.add(rightPanel, BorderLayout.EAST);
+        this.add(bottomPanel, BorderLayout.SOUTH);
 
         this.pack();
         this.setVisible(true);

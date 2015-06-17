@@ -5,9 +5,10 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
+SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET escape_string_warning = off;
 
 --
 -- Name: coorte; Type: SCHEMA; Schema: -; Owner: postgres
@@ -37,18 +38,13 @@ CREATE SCHEMA lab;
 ALTER SCHEMA lab OWNER TO postgres;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
 --
 
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+CREATE OR REPLACE PROCEDURAL LANGUAGE plpgsql;
 
 
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
+ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO postgres;
 
 SET search_path = extraction, pg_catalog;
 
@@ -139,17 +135,6 @@ CREATE FUNCTION beingbreastfed_mapping(value character varying) RETURNS integer
 
 
 ALTER FUNCTION extraction.beingbreastfed_mapping(value character varying) OWNER TO postgres;
-
---
--- Name: beingbreastfedoptions_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
---
-
-CREATE FUNCTION beingbreastfedoptions_mapping(value character varying) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$ DECLARE result character varying; BEGIN SELECT CASE value WHEN 'ONLY_BREASTFEED' THEN 1 WHEN 'OTHER_LIQUIDS' THEN 2 ELSE NULL END INTO result; RETURN result; END; $$;
-
-
-ALTER FUNCTION extraction.beingbreastfedoptions_mapping(value character varying) OWNER TO postgres;
 
 --
 -- Name: birthweight_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
@@ -260,17 +245,6 @@ CREATE FUNCTION concern_mapping(value character varying) RETURNS integer
 
 
 ALTER FUNCTION extraction.concern_mapping(value character varying) OWNER TO postgres;
-
---
--- Name: conformstotheministry_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
---
-
-CREATE FUNCTION conformstotheministry_mapping(value character varying) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$ DECLARE result character varying; BEGIN SELECT CASE value WHEN 'AGREE' THEN 1 WHEN 'DISAGREE' THEN 2 WHEN 'NOT_AGREE_NOR_DISAGREE' THEN 3 ELSE NULL END INTO result; RETURN result; END; $$;
-
-
-ALTER FUNCTION extraction.conformstotheministry_mapping(value character varying) OWNER TO postgres;
 
 --
 -- Name: consumptionfrequency_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
@@ -524,17 +498,6 @@ CREATE FUNCTION intentionofbreastfeed_mapping(value character varying) RETURNS i
 
 
 ALTER FUNCTION extraction.intentionofbreastfeed_mapping(value character varying) OWNER TO postgres;
-
---
--- Name: intentiontoamententa_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
---
-
-CREATE FUNCTION intentiontoamententa_mapping(value character varying) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$ DECLARE result character varying; BEGIN SELECT CASE value WHEN 'WANT_TO_NURSE' THEN 1 WHEN 'NOT_WANT' THEN 2 WHEN 'IS_IN_DOUBT' THEN 3 WHEN 'MEDICAL_REASON' THEN 4 ELSE NULL END INTO result; RETURN result; END; $$;
-
-
-ALTER FUNCTION extraction.intentiontoamententa_mapping(value character varying) OWNER TO postgres;
 
 --
 -- Name: laughability_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
@@ -1118,17 +1081,6 @@ CREATE FUNCTION yesnoupper_mapping(value character varying) RETURNS integer
 
 
 ALTER FUNCTION extraction.yesnoupper_mapping(value character varying) OWNER TO postgres;
-
---
--- Name: yesnouppercase_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
---
-
-CREATE FUNCTION yesnouppercase_mapping(value character varying) RETURNS integer
-    LANGUAGE plpgsql
-    AS $$ DECLARE result character varying; BEGIN SELECT CASE value WHEN 'YES' THEN 1 WHEN 'NO' THEN 0 ELSE NULL END INTO result; RETURN result; END; $$;
-
-
-ALTER FUNCTION extraction.yesnouppercase_mapping(value character varying) OWNER TO postgres;
 
 --
 -- Name: yesnouppercasecorrectposition_mapping(character varying); Type: FUNCTION; Schema: extraction; Owner: postgres
@@ -2395,6 +2347,48 @@ CREATE TABLE coa_a (
 
 
 ALTER TABLE coorte.coa_a OWNER TO postgres;
+
+--
+-- Name: csts_a; Type: TABLE; Schema: coorte; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE csts_a (
+    id bigint DEFAULT nextval('public.survey_activity_seq'::regclass) NOT NULL,
+    stack_state text,
+    activity_id integer,
+    cstsa5_metadata character varying(255),
+    cstsa5_metadata_comment text,
+    cstsa6_metadata character varying(255),
+    cstsa6_metadata_comment text,
+    cstsa4_metadata character varying(255),
+    cstsa4_metadata_comment text,
+    cstsa2a boolean,
+    cstsa2a_metadata character varying(255),
+    cstsa2a_metadata_comment text,
+    cstsa2b boolean,
+    cstsa2b_metadata character varying(255),
+    cstsa2b_metadata_comment text,
+    cstsa2c boolean,
+    cstsa2c_metadata character varying(255),
+    cstsa2c_metadata_comment text,
+    cstsa2d boolean,
+    cstsa2d_metadata character varying(255),
+    cstsa2d_metadata_comment text,
+    qc_group character varying(255),
+    cstsa1ah integer,
+    cstsa1a_metadata character varying(255),
+    cstsa1a_metadata_comment text,
+    cstsa1am integer,
+    cstsa2dq text,
+    cstsa2dq_metadata character varying(255),
+    cstsa2dq_metadata_comment text,
+    fluoridetube30_id integer,
+    geltube30_id integer,
+    geltube30cq_id integer
+);
+
+
+ALTER TABLE coorte.csts_a OWNER TO postgres;
 
 --
 -- Name: dso_a; Type: TABLE; Schema: coorte; Owner: postgres; Tablespace: 
@@ -8196,10 +8190,8 @@ CREATE TABLE aec_a (
 
 ALTER TABLE lab.aec_a OWNER TO postgres;
 
-SET search_path = public, pg_catalog;
-
 --
--- Name: aliquot_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: aliquot_seq; Type: SEQUENCE; Schema: lab; Owner: postgres
 --
 
 CREATE SEQUENCE aliquot_seq
@@ -8210,16 +8202,14 @@ CREATE SEQUENCE aliquot_seq
     CACHE 1;
 
 
-ALTER TABLE public.aliquot_seq OWNER TO postgres;
-
-SET search_path = lab, pg_catalog;
+ALTER TABLE lab.aliquot_seq OWNER TO postgres;
 
 --
 -- Name: aliquot; Type: TABLE; Schema: lab; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE aliquot (
-    id integer DEFAULT nextval('public.aliquot_seq'::regclass) NOT NULL,
+    id integer DEFAULT nextval('aliquot_seq'::regclass) NOT NULL,
     aliquot_moment character varying(255),
     aliquot_status character varying(255),
     aliquot_type character varying(255),
@@ -10634,53 +10624,6 @@ ALTER TABLE extraction.v_ttps_a OWNER TO postgres;
 SET search_path = lab, pg_catalog;
 
 --
--- Name: aliquot_seq; Type: SEQUENCE; Schema: lab; Owner: postgres
---
-
-CREATE SEQUENCE aliquot_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE lab.aliquot_seq OWNER TO postgres;
-
-SET search_path = public, pg_catalog;
-
---
--- Name: field_center_qc_counter_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE field_center_qc_counter_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.field_center_qc_counter_seq OWNER TO postgres;
-
-SET search_path = lab, pg_catalog;
-
---
--- Name: field_center_qc_counter; Type: TABLE; Schema: lab; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE field_center_qc_counter (
-    id integer DEFAULT nextval('public.field_center_qc_counter_seq'::regclass) NOT NULL,
-    counter integer,
-    fieldcenter character varying(255),
-    tube_counter integer,
-    visit integer
-);
-
-
-ALTER TABLE lab.field_center_qc_counter OWNER TO postgres;
-
---
 -- Name: field_center_qc_counter_seq; Type: SEQUENCE; Schema: lab; Owner: postgres
 --
 
@@ -10694,38 +10637,20 @@ CREATE SEQUENCE field_center_qc_counter_seq
 
 ALTER TABLE lab.field_center_qc_counter_seq OWNER TO postgres;
 
-SET search_path = public, pg_catalog;
-
 --
--- Name: participant_visit_qc_group_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: field_center_qc_counter; Type: TABLE; Schema: lab; Owner: postgres; Tablespace: 
 --
 
-CREATE SEQUENCE participant_visit_qc_group_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.participant_visit_qc_group_seq OWNER TO postgres;
-
-SET search_path = lab, pg_catalog;
-
---
--- Name: participant_visit_qc_group; Type: TABLE; Schema: lab; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE participant_visit_qc_group (
-    id integer DEFAULT nextval('public.participant_visit_qc_group_seq'::regclass) NOT NULL,
-    control_group character varying(255),
-    field_center character varying(255),
-    visit integer,
-    participant_id integer
+CREATE TABLE field_center_qc_counter (
+    id integer DEFAULT nextval('field_center_qc_counter_seq'::regclass) NOT NULL,
+    counter integer,
+    fieldcenter character varying(255),
+    tube_counter integer,
+    visit integer
 );
 
 
-ALTER TABLE lab.participant_visit_qc_group OWNER TO postgres;
+ALTER TABLE lab.field_center_qc_counter OWNER TO postgres;
 
 --
 -- Name: participant_visit_qc_group_seq; Type: SEQUENCE; Schema: lab; Owner: postgres
@@ -10740,6 +10665,21 @@ CREATE SEQUENCE participant_visit_qc_group_seq
 
 
 ALTER TABLE lab.participant_visit_qc_group_seq OWNER TO postgres;
+
+--
+-- Name: participant_visit_qc_group; Type: TABLE; Schema: lab; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE participant_visit_qc_group (
+    id integer DEFAULT nextval('participant_visit_qc_group_seq'::regclass) NOT NULL,
+    control_group character varying(255),
+    field_center character varying(255),
+    visit integer,
+    participant_id integer
+);
+
+
+ALTER TABLE lab.participant_visit_qc_group OWNER TO postgres;
 
 --
 -- Name: v_aliquot_processing; Type: VIEW; Schema: lab; Owner: postgres
@@ -10923,20 +10863,6 @@ CREATE TABLE general_comment (
 ALTER TABLE public.general_comment OWNER TO postgres;
 
 --
--- Name: inea_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE inea_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.inea_seq OWNER TO postgres;
-
---
 -- Name: permission_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -10992,20 +10918,6 @@ CREATE TABLE permission_grid (
 ALTER TABLE public.permission_grid OWNER TO postgres;
 
 --
--- Name: rana_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE rana_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.rana_seq OWNER TO postgres;
-
---
 -- Name: randomization_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -11032,20 +10944,6 @@ CREATE TABLE randomization (
 
 
 ALTER TABLE public.randomization OWNER TO postgres;
-
---
--- Name: tube_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE tube_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.tube_seq OWNER TO postgres;
 
 --
 -- Name: uploaded_file_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -11255,6 +11153,14 @@ ALTER TABLE ONLY bia_a
 
 ALTER TABLE ONLY coa_a
     ADD CONSTRAINT coa_a_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: csts_a_pkey; Type: CONSTRAINT; Schema: coorte; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY csts_a
+    ADD CONSTRAINT csts_a_pkey PRIMARY KEY (id);
 
 
 --
@@ -12065,6 +11971,13 @@ CREATE INDEX bia_a_activity_idx ON bia_a USING btree (activity_id);
 --
 
 CREATE INDEX coa_a_activity_idx ON coa_a USING btree (activity_id);
+
+
+--
+-- Name: csts_a_activity_idx; Type: INDEX; Schema: coorte; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX csts_a_activity_idx ON csts_a USING btree (activity_id);
 
 
 --
@@ -15793,17 +15706,6 @@ GRANT ALL ON FUNCTION beingbreastfed_mapping(value character varying) TO estatis
 
 
 --
--- Name: beingbreastfedoptions_mapping(character varying); Type: ACL; Schema: extraction; Owner: postgres
---
-
-REVOKE ALL ON FUNCTION beingbreastfedoptions_mapping(value character varying) FROM PUBLIC;
-REVOKE ALL ON FUNCTION beingbreastfedoptions_mapping(value character varying) FROM postgres;
-GRANT ALL ON FUNCTION beingbreastfedoptions_mapping(value character varying) TO postgres;
-GRANT ALL ON FUNCTION beingbreastfedoptions_mapping(value character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION beingbreastfedoptions_mapping(value character varying) TO estatistica;
-
-
---
 -- Name: birthweight_mapping(character varying); Type: ACL; Schema: extraction; Owner: postgres
 --
 
@@ -15911,17 +15813,6 @@ REVOKE ALL ON FUNCTION concern_mapping(value character varying) FROM postgres;
 GRANT ALL ON FUNCTION concern_mapping(value character varying) TO postgres;
 GRANT ALL ON FUNCTION concern_mapping(value character varying) TO PUBLIC;
 GRANT ALL ON FUNCTION concern_mapping(value character varying) TO estatistica;
-
-
---
--- Name: conformstotheministry_mapping(character varying); Type: ACL; Schema: extraction; Owner: postgres
---
-
-REVOKE ALL ON FUNCTION conformstotheministry_mapping(value character varying) FROM PUBLIC;
-REVOKE ALL ON FUNCTION conformstotheministry_mapping(value character varying) FROM postgres;
-GRANT ALL ON FUNCTION conformstotheministry_mapping(value character varying) TO postgres;
-GRANT ALL ON FUNCTION conformstotheministry_mapping(value character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION conformstotheministry_mapping(value character varying) TO estatistica;
 
 
 --
@@ -16175,17 +16066,6 @@ REVOKE ALL ON FUNCTION intentionofbreastfeed_mapping(value character varying) FR
 GRANT ALL ON FUNCTION intentionofbreastfeed_mapping(value character varying) TO postgres;
 GRANT ALL ON FUNCTION intentionofbreastfeed_mapping(value character varying) TO PUBLIC;
 GRANT ALL ON FUNCTION intentionofbreastfeed_mapping(value character varying) TO estatistica;
-
-
---
--- Name: intentiontoamententa_mapping(character varying); Type: ACL; Schema: extraction; Owner: postgres
---
-
-REVOKE ALL ON FUNCTION intentiontoamententa_mapping(value character varying) FROM PUBLIC;
-REVOKE ALL ON FUNCTION intentiontoamententa_mapping(value character varying) FROM postgres;
-GRANT ALL ON FUNCTION intentiontoamententa_mapping(value character varying) TO postgres;
-GRANT ALL ON FUNCTION intentiontoamententa_mapping(value character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION intentiontoamententa_mapping(value character varying) TO estatistica;
 
 
 --
@@ -16769,17 +16649,6 @@ REVOKE ALL ON FUNCTION yesnoupper_mapping(value character varying) FROM postgres
 GRANT ALL ON FUNCTION yesnoupper_mapping(value character varying) TO postgres;
 GRANT ALL ON FUNCTION yesnoupper_mapping(value character varying) TO PUBLIC;
 GRANT ALL ON FUNCTION yesnoupper_mapping(value character varying) TO estatistica;
-
-
---
--- Name: yesnouppercase_mapping(character varying); Type: ACL; Schema: extraction; Owner: postgres
---
-
-REVOKE ALL ON FUNCTION yesnouppercase_mapping(value character varying) FROM PUBLIC;
-REVOKE ALL ON FUNCTION yesnouppercase_mapping(value character varying) FROM postgres;
-GRANT ALL ON FUNCTION yesnouppercase_mapping(value character varying) TO postgres;
-GRANT ALL ON FUNCTION yesnouppercase_mapping(value character varying) TO PUBLIC;
-GRANT ALL ON FUNCTION yesnouppercase_mapping(value character varying) TO estatistica;
 
 
 --

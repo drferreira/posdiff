@@ -1,38 +1,68 @@
 package br.org.tutty.posdiff.database;
 
+import cz.startnet.utils.pgdiff.PgDiff;
+import cz.startnet.utils.pgdiff.PgDiffArguments;
+
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by drferreira on 16/06/15.
  */
 public class DatabaseManager {
 
-    public BufferedReader createSchema(Database database) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder(mountCommand(database));
+    public BufferedReader compare(Database databaseLeft, Database databaseRight) throws IOException, InterruptedException {
+        File resultDirectory = createResultDirectory();
 
-        Process process = processBuilder.start();
-        process.waitFor(10, TimeUnit.MINUTES);
+        File schemaDatabaseLeft = createSchema(resultDirectory, databaseLeft);
+        File schemaDatabaseRight = createSchema(resultDirectory, databaseRight);
 
-        if (process.exitValue() != 1) {
-            return new BufferedReader(new InputStreamReader(process.getInputStream()));
-        } else {
-            return new BufferedReader(new InputStreamReader(process.getErrorStream()));
-        }
+        return createDiff(resultDirectory, schemaDatabaseLeft, schemaDatabaseRight);
     }
 
-    public void createDiff(Database databaseLeft, Database databaseRight) throws IOException, InterruptedException {
-        createSchema(databaseLeft);
-        createSchema(databaseRight);
+    public File createSchema(File target, Database database) throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder(mountCommand(database));
+        processBuilder.environment().put("PGPASSWORD", database.getPassword());
 
-//        String schemaAddressLeft = targetDir.getAbsolutePath() + "/" + "schema_" + databaseLeft.getName() + ".sql";
-//        String schemaAddressRight = targetDir.getAbsolutePath() + "/" + "schema_" + databaseLeft.getName() + ".sql";
 
-//        String[] schemas = {schemaAddressLeft, schemaAddressRight};
+        processBuilder.redirectInput(File.createTempFile("commands", ".txt", target));
+        processBuilder.redirectError(File.createTempFile("errors", ".txt", target));
 
-//        Main.main(schemas);
+        File output = File.createTempFile("output", ".sql", target);
+
+        processBuilder.redirectOutput(output);
+        Process process = processBuilder.start();
+
+        process.waitFor();
+        return output;
+    }
+
+    private File createResultDirectory(){
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy_hh:mm:ss") ;
+        String curDate =dateFormat.format(date);
+
+        String downloadDir = System.getProperty("user.home")+File.separator+"Downloads"+File.separator+"posdiff"+File.separator+curDate;
+        File file = new File(downloadDir);
+        file.mkdirs();
+        return file;
+    }
+
+    public BufferedReader createDiff(File target, File schemaLeft, File schemaRight) throws IOException, InterruptedException {
+        File resultFile = File.createTempFile("result", ".sql", target);
+
+        PrintWriter resultWriter = new PrintWriter(resultFile);
+
+        InputStream inputStreamLeft = new FileInputStream(schemaLeft);
+        InputStream inputStreamRight = new FileInputStream(schemaRight);
+
+        PgDiff.createDiff(resultWriter, new PgDiffArguments(),inputStreamLeft, inputStreamRight );
+        resultWriter.flush();
+
+        return new BufferedReader(new FileReader(resultFile));
     }
 
     private List<String> mountCommand(Database database){
@@ -55,6 +85,4 @@ public class DatabaseManager {
 
         return commands;
     }
-
-
 }

@@ -6,10 +6,8 @@ import javax.swing.*;
  * Created by drferreira on 16/06/15.
  */
 public class CompareButton extends JButton implements View{
-    private static String TEXT = "Comparar";
-
-    public CompareButton() {
-        super(TEXT);
+    public CompareButton(String text) {
+        super(text);
     }
 
     @Override
