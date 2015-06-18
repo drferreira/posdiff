@@ -59,7 +59,7 @@ public class DatabaseManager {
         InputStream inputStreamLeft = new FileInputStream(schemaLeft);
         InputStream inputStreamRight = new FileInputStream(schemaRight);
 
-        PgDiff.createDiff(resultWriter, new PgDiffArguments(),inputStreamLeft, inputStreamRight );
+        PgDiff.createDiff(resultWriter, new PgDiffArguments(),inputStreamRight,inputStreamLeft );
         resultWriter.flush();
 
         return new BufferedReader(new FileReader(resultFile));
