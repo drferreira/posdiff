@@ -8,10 +8,11 @@ import java.awt.*;
  */
 public class Window extends JFrame implements View{
     private static Integer height = 200;
-    private static Integer widht = 800;
+    private static Integer widht = 900;
 
     public RightPanel rightPanel = new RightPanel();
     public LeftPanel leftPanel = new LeftPanel();
+
     public BottomPanel bottomPanel = new BottomPanel(this);
 
     @Override

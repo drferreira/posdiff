@@ -14,10 +14,10 @@ import java.util.List;
 public class LeftPanel extends JPanel implements View {
     private static Integer height = 200;
     private static Integer widht = 400;
-    private static String URL_LABEL      = "URL            ";
-    private static String DB_NAME_LABEL  = "Database Name  ";
+    private static String URL_LABEL = "URL            ";
+    private static String DB_NAME_LABEL = "Database Name  ";
     private static String USERNAME_LABEL = "Username       ";
-    private static String PORT_LABEL     = "Port           ";
+    private static String PORT_LABEL = "Port           ";
     private static String PASSWORD_LABEL = "Password       ";
 
     private Label urlLabelLeft = new Label(URL_LABEL);
@@ -35,32 +35,37 @@ public class LeftPanel extends JPanel implements View {
     private Label passwordLabelLeft = new Label(PASSWORD_LABEL);
     public Password passwordLeft = new Password();
 
+    public GridLayout layout;
+
     @Override
     public void mount() {
-    List<View> views = new ArrayList<>();
-    views.add(urlLabelLeft);
-    views.add(urlDataBaseLeft);
+        layout = new GridLayout(5,2);
 
-    views.add(databaseNameLabelLeft);
-    views.add(databaseNameLeft);
+        List<View> views = new ArrayList<>();
+        views.add(urlLabelLeft);
+        views.add(urlDataBaseLeft);
 
-    views.add(userNameLabelLeft);
-    views.add(usernameLeft);
+        views.add(databaseNameLabelLeft);
+        views.add(databaseNameLeft);
 
-    views.add(portLabelLeft);
-    views.add(portLeft);
+        views.add(userNameLabelLeft);
+        views.add(usernameLeft);
 
-    views.add(passwordLabelLeft);
-    views.add(passwordLeft);
+        views.add(portLabelLeft);
+        views.add(portLeft);
+
+        views.add(passwordLabelLeft);
+        views.add(passwordLeft);
 
 
-    views.forEach(view -> view.mount());
+        views.forEach(view -> view.mount());
 
-    addComponents();
-    this.setVisible(true);
-}
+        addComponents();
+        this.setLayout(layout);
+        this.setVisible(true);
+    }
 
-    private void addComponents(){
+    private void addComponents() {
         this.add(databaseNameLabelLeft);
         this.add(databaseNameLeft);
 

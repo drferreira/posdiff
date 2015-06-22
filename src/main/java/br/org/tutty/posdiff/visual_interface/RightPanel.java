@@ -34,48 +34,52 @@ public class RightPanel extends JPanel implements View{
     public Label passwordLabelRight = new Label(PASSWORD_LABEL);
     public Password passwordRight = new Password();
 
+    public GridLayout layout;
+
     @Override
     public void mount() {
+        layout = new GridLayout(5,2);
+
         List<View> views = new ArrayList<>();
 
-        views.add(urlLabelRight);
         views.add(urlDataBaseRight);
+        views.add(urlLabelRight);
 
-        views.add(databaseNameLabelRight);
         views.add(databaseNameRight);
+        views.add(databaseNameLabelRight);
 
-        views.add(usernameLabelRight);
         views.add(usernameRight);
+        views.add(usernameLabelRight);
 
-        views.add(portLabelRight);
         views.add(portRight);
+        views.add(portLabelRight);
 
-        views.add(passwordLabelRight);
         views.add(passwordRight);
+        views.add(passwordLabelRight);
 
         views.forEach(view -> view.mount());
 
         addComponents();
+        this.setLayout(layout);
         this.setVisible(true);
     }
 
     private void addComponents(){
 
-        this.add(databaseNameLabelRight);
         this.add(databaseNameRight);
+        this.add(databaseNameLabelRight);
 
-        this.add(usernameLabelRight);
         this.add(usernameRight);
+        this.add(usernameLabelRight);
 
-        this.add(portLabelRight);
         this.add(portRight);
+        this.add(portLabelRight);
 
-        this.add(passwordLabelRight);
         this.add(passwordRight);
+        this.add(passwordLabelRight);
 
-        this.add(urlLabelRight);
         this.add(urlDataBaseRight);
-
+        this.add(urlLabelRight);
     }
 
     @Override
