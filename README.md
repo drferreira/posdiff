@@ -2,16 +2,19 @@
 
 Diff between Postgres Databases
 
-PG_DUMP
-$sudo apt-get install postgresql-client-{PG_VERSION}
+PG_DUMP</br>
+$sudo apt-get install postgresql-client-{PG_VERSION}</br>
+</br>
 
-Build
-$mvn clean compile assembly:single
+Build</br>
+$mvn clean compile assembly:single</br>
+</br>
 
-OPEN (java-8)
-java -jar postdiff.jar
+Run (java-8)</br>
+java -jar postdiff.jar</br>
+</br>
 
-USING
+Using</br>
 Left Side (Source)   -------------------------->   Right Side (Target) 
 
  
