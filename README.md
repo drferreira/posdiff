@@ -1,20 +1,23 @@
-# posdiff
+# Posdiff
 
-Diff between Postgres Databases
+Ferramenta para gerar script de update entre duas bases de dados.
 
-PG_DUMP</br>
-$sudo apt-get install postgresql-client-{PG_VERSION}</br>
-</br>
+Dependencias: <br>
+> pg_dump 9.5 <br>
+> java 8
 
-Build</br>
-$mvn clean compile assembly:single</br>
-</br>
+## Instalação pg_dump
+> $ sudo apt-get install postgresql-client-9.5 </br>
 
-Run (java-8)</br>
+## Build Jar
+> $ mvn clean compile assembly:single</br>
+
+## Run 
 java -jar postdiff.jar</br>
-</br>
 
-Using</br>
-Left Side (Source)   -------------------------->   Right Side (Target) 
+## Utilizando</br>
+**Lado Esquerdo** : Base de dados utilizada como referencia <br>
+**Lado Direito**  : Base de dados de destino das alterações.
+
 
  
