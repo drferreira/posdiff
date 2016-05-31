@@ -68,7 +68,7 @@ public class DatabaseManager {
     private List<String> mountCommand(Database database){
         List<String> commands = new ArrayList<String>();
         commands.add("pg_dump");
-        commands.add("-i");
+        //commands.add("-i");
         commands.add("-U");
         commands.add(database.getUser());
         commands.add("-h");
